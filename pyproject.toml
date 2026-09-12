@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flypath-engine"
-version = "0.2.0"
+version = "0.3.0"
 description = "Shared mission-planning engine for FlyPath"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -17,3 +17,6 @@ dependencies = [
 [tool.setuptools]
 package-dir = {"" = "src"}
 packages = ["flypath_engine"]
+
+[tool.setuptools.package-data]
+flypath_engine = ["profiles/*.json"]

@@ -14,3 +14,7 @@ python tests/test_route.py
 python tests/test_grid.py
 python tests/test_measurements.py
 ```
+
+CI runs on Linux x64, Windows x64, and macOS ARM with Python 3.10 and
+3.13 coverage. macOS Intel remains part of the QGIS installation matrix because
+GitHub does not provide a standard Intel runner for this private repository.

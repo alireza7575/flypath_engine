@@ -79,10 +79,11 @@ The target result contains:
 - warnings with stable codes and readable messages
 
 Each flight references inclusive route waypoint indices. Adjacent flights
-share their seam index. Full-auto actions are ordered per flight and contain
-camera rotation, the first 3-second hover, and photo actions. A seam therefore
-has a photo in both adjacent flights. Missing launch or required home travel
-sets complete totals to `null` while retaining named known totals.
+share their seam index. Actions are ordered per flight. Semi-auto contains a
+first-waypoint camera rotation but no hover or photo commands. Full-auto
+contains camera rotation, the first 3-second hover, and photo actions. A seam
+therefore has a photo in both adjacent flights. Missing launch or required
+home travel sets complete totals to `null` while retaining named known totals.
 
 ## Ownership
 

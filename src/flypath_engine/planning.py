@@ -389,7 +389,7 @@ def _flight_result(index, start, end, points, edges, speed, mode, interval, phot
             actions.append({"type": "take_photo", "waypoint_index": waypoint_index})
         photo_count = end - start + 1
     else:
-        actions = []
+        actions = [{"type": "rotate_camera", "waypoint_index": start, "pitch_deg": -90}]
         photo_count = math.floor((route_distance / speed) / interval)
     return {
         "index": index,

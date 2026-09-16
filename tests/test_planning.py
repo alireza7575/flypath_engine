@@ -207,6 +207,15 @@ def test_semi_auto_rounds_each_flight_route_and_excludes_home_travel():
     expected = sum(math.floor((flight["route_distance_m"] / request["speed_m_s"]) / interval)
                    for flight in result["flights"])
     assert result["statistics"]["photo_count"] == expected
+    for flight in result["flights"]:
+        assert flight["actions"] == [{
+            "type": "rotate_camera",
+            "waypoint_index": flight["route_start_waypoint_index"],
+            "pitch_deg": -90,
+        }]
+        assert flight["photo_count"] == math.floor(
+            (flight["route_distance_m"] / request["speed_m_s"]) / interval
+        )
     assert result["statistics"]["estimates_complete"]
     assert result["statistics"]["total_distance_m"] > result["statistics"]["route_distance_m"]
 

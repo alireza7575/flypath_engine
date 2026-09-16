@@ -49,6 +49,37 @@ terrain, corridor, or legacy saved routes. A broad UI rewrite is deferred.
   with matching counts in both KMZ members. This is an extracted-package smoke
   test, not a QGIS plugin-manager installation or aircraft execution test.
 
+## Source cleanup after integration
+
+Removed redundant plugin action/live-result caches and repeated result validation;
+preview now uses the engine's flight partitions directly. Removed the website's
+duplicate estimate cache, unreachable route fallback, repeated profile lookup,
+and three copies of the same legacy distance helper. Each consumer now has one
+camera-action XML serializer for both saved legacy routes and engine actions.
+
+Tracked handwritten Python/JavaScript production lines, including comments and
+blank lines, excluding tests, vendored source, migrations, and tooling:
+
+| Repository | Before cleanup | After cleanup | Net removed |
+| --- | ---: | ---: | ---: |
+| Plugin (baseline `713e8a2`) | 9,942 | 9,810 | 132 |
+| Website (baseline `846106b`) | 15,949 | 15,837 | 112 |
+| Engine | 1,206 | 1,206 | 0 |
+
+Active browser previews, legacy saved-route export, terrain, and corridor paths
+remain: deleting them requires migrating their remaining behavior first.
+Database columns and the engine release/vendor pin were not changed.
+
+Cleanup verification: website 315 Django and 119 JavaScript tests passed before
+the serializer consolidation, followed by 31 export tests on the final writer.
+All 64 before/after canonical XML comparisons preserved action IDs, timing,
+ordering, turn flags, and heights. Eight cross-product planning/export cases
+and the vendored-source check also passed.
+Final plugin checks passed: 18 WPML, five adapter, 13 terrain checks, and the
+QGIS dialog test. The rebuilt ZIP passed an extracted offline QGIS 3.44.14 /
+Python 3.12 smoke test: 64 waypoints in one flight, with 64 photo actions in
+both KMZ members. This remains a package smoke test, not an aircraft test.
+
 ## Remaining work and explicit limits
 
 1. Publish the reviewed engine tag before installing the website requirements

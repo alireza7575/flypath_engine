@@ -4,11 +4,9 @@ This contract defines the boundary used by the FlyPath website and QGIS plugin.
 It describes values and behavior independently of Python, JavaScript,
 QGIS, map rendering, persistence, or KMZ serialization.
 
-This is the target first-phase contract. Releases through `v0.3.0` provide
-shared geometry, route ordering, measurements, route-level statistics, split
-helpers, and drone profiles. They do not yet provide this complete `plan_2d`
-result. Until that entry point ships, client split/action/recovery behavior is
-not authoritative engine behavior.
+The unreleased engine `v0.4.0` candidate implements contract version 1 through
+`plan_2d(request)`. Both consumers remain on `v0.3.0`; the ownership statements
+below describe the migration target until they pin and consume this result.
 
 ## Versioning
 
@@ -45,6 +43,25 @@ The target `plan_2d` request contains:
 - turn style and finish action
 - split enablement, requested flight count, and waypoint limit
 
+Contract version 1 uses `drone_profile_id`, `profile_version: 1`, and direction
+convention `plugin_grid_ccw_from_north`. Capture mode is `semi_auto` or
+`full_auto`; full-auto also requires `front_overlap_ratio`. The profile owns
+the capture interval. A legacy `capture.interval_s` is accepted only when it
+exactly matches the profile value.
+
+Optional `locations` contains either `shared: {launch, home}` or a
+`per_flight` array whose length equals `split.requested_flights`. If automatic
+splitting would change a route with per-flight locations, export is blocked
+until those associations are reviewed.
+
+`cross_hatch` and `reverse_route` preserve current 2D workflows. Terrain and
+corridor planning fail explicitly as unsupported. Unknown fields fail so
+misspelled planning input cannot be ignored.
+
+Compatibility limits are 500 metres altitude, 1,000 metres margin, 200
+waypoints per flight, and 7,961 generated route waypoints. Requests above
+engine capacity fail with `capacity_exceeded`; values are never clamped.
+
 Corridor planning and terrain following are outside the first phase.
 
 ## First-phase result
@@ -61,6 +78,12 @@ The target result contains:
 - calculation assumptions
 - warnings with stable codes and readable messages
 
+Each flight references inclusive route waypoint indices. Adjacent flights
+share their seam index. Full-auto actions are ordered per flight and contain
+camera rotation, the first 3-second hover, and photo actions. A seam therefore
+has a photo in both adjacent flights. Missing launch or required home travel
+sets complete totals to `null` while retaining named known totals.
+
 ## Ownership
 
 The shared Python core owns coordinate normalization, direction, 2D route generation, ordering,
@@ -73,6 +96,9 @@ they do not recalculate routes, splits, photo actions, or estimates.
 
 ## Errors
 
-Errors contain a stable code, field path where applicable, and display message.
+Invalid requests raise `PlanningError`; `as_dict()` contains a stable code,
+field path where applicable, and display message. Flyable plans that cannot be
+exported because splitting, waypoint, battery, or location-association rules
+are unmet return `validation.export_allowed: false` with structured errors.
 Invalid geometry, unsupported versions, missing profiles, and invalid values
 fail explicitly. A partial flyable route is never returned as success.

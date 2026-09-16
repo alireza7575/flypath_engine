@@ -23,6 +23,9 @@ def test_shared_drone_profiles():
         assert profile["camera"]["focal_length_mm"] > 0
         assert isinstance(profile["camera"]["continuous_trigger"], bool)
 
+    profiles["DJI Mini 3 Pro"]["camera"]["focal_length_mm"] = -1
+    assert drone_profile("mini3pro")[1]["camera"]["focal_length_mm"] == 6.9
+
 
 if __name__ == "__main__":
     test_shared_drone_profiles()

@@ -2,8 +2,9 @@
 
 Recorded: 2026-09-16
 
-State: decisions recorded; implementation pending. This is not a claim that
-the complete first-phase contract is ready or implemented.
+State: engine contract implemented locally for the unreleased `v0.4.0`
+candidate; website and plugin integration remains pending a release/pin/vendor
+cycle and consumer adapter migration.
 
 ## Problem Statement
 
@@ -180,9 +181,9 @@ remain explicit rather than inheriting either product's behavior silently.
 
 ## Testing Decisions
 
-The following test boundary is proposed for confirmation, not yet user-approved:
-use the engine's public versioned planning request/result as the primary
-acceptance boundary, with thin Django and QGIS adapter parity checks.
+The implementation authorization adopted the engine's public versioned
+planning request/result as the primary acceptance boundary. Thin Django and
+QGIS adapter parity checks remain part of consumer integration.
 
 - Test observable outputs and invariants, not private helper structure.
 - Reuse existing route, grid, measurement, statistics, profile, and direction
@@ -233,7 +234,6 @@ acceptance boundary, with thin Django and QGIS adapter parity checks.
 
 ## Out of Scope
 
-- Implementing these decisions as part of this documentation request.
 - Launch/home location-picker UI in this step.
 - Editable per-mission photo intervals and their UI.
 - Terrain and corridor migration into the engine.
@@ -251,8 +251,7 @@ and verification work includes:
   flight boundaries or flight count; do not silently attach a location to the
   wrong flight. Escalate a meaningful behavior conflict if implementation
   cannot resolve it within the agreed contract.
-- Confirming the proposed test boundary and completing adapter, saved-route,
-  packaging, offline QGIS, and aircraft validation.
+- Completing adapter, saved-route, offline QGIS, and real-aircraft validation.
 
 Implementation must not interpret remaining technical details as approval to
 preserve all current plugin or website behavior.

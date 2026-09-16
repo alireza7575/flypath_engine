@@ -32,3 +32,6 @@ jobs:
       - run: python tests/test_route.py
       - run: python tests/test_grid.py
       - run: python tests/test_measurements.py
+      - run: python tests/test_statistics.py
+      - run: python tests/test_profiles.py
+      - run: python tests/test_planning.py

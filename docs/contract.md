@@ -5,8 +5,9 @@ It describes values and behavior independently of Python, JavaScript,
 QGIS, map rendering, persistence, or KMZ serialization.
 
 The unreleased engine `v0.4.0` candidate implements contract version 1 through
-`plan_2d(request)`. Both consumers remain on `v0.3.0`; the ownership statements
-below describe the migration target until they pin and consume this result.
+`plan_2d(request)`. Both local consumers now adapt this result; the candidate
+has not been published remotely. See [integration status](integration-status.md)
+for verification and remaining release work.
 
 ## Versioning
 

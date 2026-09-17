@@ -4,3 +4,19 @@ __pycache__/
 build/
 dist/
 .venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+credentials.*.json
+secrets.json
+secrets.*.json

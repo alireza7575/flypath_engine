@@ -4,10 +4,10 @@ This contract defines the boundary used by the FlyPath website and QGIS plugin.
 It describes values and behavior independently of Python, JavaScript,
 QGIS, map rendering, persistence, or KMZ serialization.
 
-The unreleased engine `v0.4.0` candidate implements contract version 1 through
-`plan_2d(request)`. Both local consumers now adapt this result; the candidate
-has not been published remotely. See [integration status](integration-status.md)
-for verification and remaining release work.
+Engine release `v0.4.0` implements contract version 1 through
+`plan_2d(request)`. Both consumers adapt this result. See
+[integration status](integration-status.md) for verification and remaining
+public limits.
 
 ## Versioning
 

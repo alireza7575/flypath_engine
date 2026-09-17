@@ -1,7 +1,7 @@
 # Calculation rules
 
-These rules are implemented by contract-version-1 `plan_2d` in the unreleased
-engine `v0.4.0` candidate. Consumer integration remains pending its release.
+These rules are implemented by contract-version-1 `plan_2d` in engine release
+`v0.4.0`.
 
 ## Area and distance
 

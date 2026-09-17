@@ -12,6 +12,9 @@ The website and plugin adapters consume `v0.4.0`. The plugin vendors the
 pinned release source. See [integration status](docs/integration-status.md)
 for tested behavior and remaining public limits.
 
+The package is not published to PyPI. Consumers install the released Git tag
+or pin its commit; CI-built wheel and source archives are validation artifacts.
+
 Run the checks with a Python environment containing Shapely and pyproj:
 
 ```powershell

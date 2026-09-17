@@ -1,6 +1,6 @@
 # Shared planning integration status
 
-The `v0.4.0` candidate, contract version 1, adds the versioned `plan_2d`
+Release `v0.4.0`, contract version 1, adds the versioned `plan_2d`
 boundary for 2D routes, time-balanced flight splitting, explicit capture
 actions, profile-owned limits, known and complete estimates, warnings, and
 structured validation.
@@ -29,12 +29,11 @@ coverage, controller validation, or flight testing on supported aircraft.
 
 ## Remaining public limits
 
-1. Publish the reviewed engine tag before treating `v0.4.0` as released.
-2. Validate plugin installation across the supported QGIS/Python/platform
+1. Validate plugin installation across the supported QGIS/Python/platform
    matrix and test exported missions on supported controllers and aircraft.
-3. Enterprise native mapping export remains blocked where it cannot represent
+2. Enterprise native mapping export remains blocked where it cannot represent
    the complete shared action contract.
-4. Mission sync rejects polygon holes and multipart areas until the public sync
+3. Mission sync rejects polygon holes and multipart areas until the public sync
    contract can represent them losslessly.
-5. Launch/home coordinates are supported by the engine contract; picker UI,
+4. Launch/home coordinates are supported by the engine contract; picker UI,
    terrain/corridor migration, and controller delivery remain later phases.

@@ -3,15 +3,14 @@
 Shared Python planning engine used by the FlyPath Django website and QGIS
 plugin. The package contains no Django, QGIS, UI, persistence, or KMZ code.
 
-The unreleased `v0.4.0` candidate adds the versioned `plan_2d(request)` boundary for 2D routes,
+Release `v0.4.0` adds the versioned `plan_2d(request)` boundary for 2D routes,
 time-balanced flights, explicit capture actions, complete/known estimates,
 warnings, and export validation. The lower-level geometry, measurement,
 statistics, split-helper, and profile APIs remain available.
 
-The website and plugin adapters consume the `v0.4.0` candidate. The plugin
-vendors the pinned source. The tag has not been published remotely. See
-[integration status](docs/integration-status.md) for tested behavior and
-remaining public release limits.
+The website and plugin adapters consume `v0.4.0`. The plugin vendors the
+pinned release source. See [integration status](docs/integration-status.md)
+for tested behavior and remaining public limits.
 
 Run the checks with a Python environment containing Shapely and pyproj:
 
@@ -32,5 +31,7 @@ python tools/check_consumer_parity.py --website ../flypath.io --plugin ../FlyPat
 ```
 
 CI runs on Linux x64, Windows x64, and macOS ARM with Python 3.10 and
-3.13 coverage. macOS Intel remains part of the QGIS installation matrix but is
-not covered by the standard hosted runner matrix.
+3.13 coverage. It also builds and installs the wheel and source distribution,
+uploads those artifacts, and scans Git history for secrets. macOS Intel remains
+part of the QGIS installation matrix but is not covered by the standard hosted
+runner matrix.

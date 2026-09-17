@@ -16,7 +16,12 @@ dependencies = [
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-packages = ["flypath_engine"]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["flypath_engine"]
+namespaces = false
 
 [tool.setuptools.package-data]
 flypath_engine = ["profiles/*.json"]

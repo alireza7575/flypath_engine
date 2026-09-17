@@ -2,8 +2,8 @@
 
 Recorded: 2026-09-16
 
-State: engine contract and consumer adapters implemented for the unreleased
-`v0.4.0` candidate; publication and broader platform validation remain pending.
+State: engine contract and consumer adapters implemented for `v0.4.0`;
+broader platform validation remains pending.
 
 ## Problem Statement
 

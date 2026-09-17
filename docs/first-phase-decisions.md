@@ -2,23 +2,22 @@
 
 Recorded: 2026-09-16
 
-State: engine contract implemented locally for the unreleased `v0.4.0`
-candidate; website and plugin integration remains pending a release/pin/vendor
-cycle and consumer adapter migration.
+State: engine contract and consumer adapters implemented for the unreleased
+`v0.4.0` candidate; publication and broader platform validation remain pending.
 
 ## Problem Statement
 
 FlyPath's website and QGIS plugin share engine v0.3.0, but still independently
 decide capture placement, flight splitting, and parts of their estimates.
-Website-editable aircraft values can also differ from bundled plugin profiles.
+Consumer-owned aircraft values can also differ from released engine profiles.
 Users need equivalent planning results for the same versioned inputs.
 
 ## Solution
 
 Complete one shared Python planning engine for 2D missions without terrain.
 Both products consume its planning decisions for preview, statistics, and export.
-The website calls the engine through Django; the plugin calls its bundled copy
-directly and remains offline-capable.
+The web adapter calls the engine in its application process; the plugin calls
+its bundled copy directly and remains offline-capable.
 
 This spec records the decisions agreed so far. Unanswered behavior questions
 remain explicit rather than inheriting either product's behavior silently.
@@ -31,8 +30,8 @@ remain explicit rather than inheriting either product's behavior silently.
    and aircraft capabilities cannot drift between products.
 3. As a mission owner, I want the generating profile and engine versions retained,
    so that my saved plan has traceable provenance.
-4. As a website administrator, I want duplicated aircraft and camera values
-   removed safely, so that maintaining the database cannot change planning rules.
+4. As a product maintainer, I want one released aircraft and camera catalogue,
+   so that consumer-local metadata cannot change planning rules.
 5. As a pilot, I want flight splits balanced by estimated time, so that flights
    with different line lengths have more comparable workloads.
 6. As a pilot, I want every flight to respect waypoint limits, so that balancing
@@ -57,8 +56,8 @@ remain explicit rather than inheriting either product's behavior silently.
 ## Implementation Decisions
 
 - **Profile ownership — agreed:** released, versioned engine profiles are the
-  single source of truth. Remove duplicated website database aircraft/camera
-  values as consumers migrate. Preserve mission references and profile-version
+  single source of truth. Remove duplicated consumer-owned planning values as
+  consumers migrate. Preserve mission references and profile-version
   provenance. Do not retain website planning overrides as a second authority.
   This does not mean deleting mission settings such as chosen altitude or speed.
 - **Splitting — agreed:** balance estimated flight time, rather than line or
@@ -139,7 +138,7 @@ remain explicit rather than inheriting either product's behavior silently.
 - **No blanket time multiplier — agreed:** do not apply a general percentage
   increase to travel time in this phase. Count explicit travel, photo
   allowances, and the agreed startup wait; keep the profile's battery reserve
-  separate. Do not carry the website browser's default 25% multiplier into
+  separate. Do not carry consumer-specific blanket multipliers into
   shared estimates.
 - **Initial timing scope — agreed:** include known travel, the full-auto
   per-photo allowance, and the 3-second full-auto startup wait. Explicitly
@@ -230,7 +229,7 @@ QGIS adapter parity checks remain part of consumer integration.
 - Verify saved routes remain unchanged until explicit regeneration and that
   preview, statistics, and export consume the same current planning result.
 - Check profile migration preserves mission references and does not regenerate
-  stored routes merely because database configuration ownership changes.
+  stored routes merely because profile ownership changes.
 
 ## Out of Scope
 
@@ -255,6 +254,3 @@ and verification work includes:
 
 Implementation must not interpret remaining technical details as approval to
 preserve all current plugin or website behavior.
-
-No engine issue tracker is configured in the inspected repository. This document
-is the local spec; it has not been published or labeled in an external tracker.

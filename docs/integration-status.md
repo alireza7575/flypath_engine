@@ -1,110 +1,40 @@
-# First-phase integration status — 2026-09-16
+# Shared planning integration status
 
-## Local implementation
+The `v0.4.0` candidate, contract version 1, adds the versioned `plan_2d`
+boundary for 2D routes, time-balanced flight splitting, explicit capture
+actions, profile-owned limits, known and complete estimates, warnings, and
+structured validation.
 
-The engine candidate is `v0.4.0`, contract/profile version 1, at source commit
-`050d368a59d2be903605099fe3cd006e917507e9`. The tag is local only. No remote
-release, deployment, or application-database migration was performed.
+## Public integration
 
-- Engine: complete 2D route, deterministic direction/order, time-balanced flight
-  splitting, explicit camera actions, profile-owned intervals, known/complete
-  distances and estimates, limits, warnings, and structured validation.
-- Plugin: pinned source vendored through its verification tool; one planning
-  result supplies 2D preview, statistics, flights, and consumer export. Splitting
-  has an on/off control and defaults on for new missions. Imported routes remain
-  unchanged until explicit Preview regeneration; dirty routes cannot be exported
-  or uploaded with stale provenance.
-- Website: `/api/plan/` adapts the same engine contract. Saved requests/results
-  retain versions and provenance. Browser rendering and consumer KMZ serialization
-  consume engine flights/actions; legacy corridor/terrain behavior is retained.
-- Aircraft values: website active planning/validation/export paths use engine
-  profiles. Website metadata remains editable. The old database calculation
-  columns remain stored but are no longer calculation authority.
-- Plugin defects: changing the area invalidates the previous cached route;
-  terrain heights used for preview/export stay together; corridor sampling covers
-  segment interiors; terrain failures block export, including failures during
-  export preparation. Imported terrain routes require Preview to reacquire heights.
-
-Legacy browser/plugin calculations are retained only where still required for
-terrain, corridor, or legacy saved routes. A broad UI rewrite is deferred.
+- The QGIS plugin vendors the pinned engine source and remains offline-capable.
+- The web adapter and plugin consume the same planning request and result.
+- Released engine profiles are the planning authority for both consumers.
+- Saved routes remain unchanged until explicit regeneration.
+- Preview, statistics, splitting, and supported exports consume one planning
+  result per generated route.
+- Terrain and corridor planning remain consumer-owned legacy paths.
 
 ## Verification
 
-- All six engine direct test scripts pass, including 12 planning acceptance cases
-  and 14 route cases. The wheel builds and installs into the website environment.
-- Website: full Django suite passed 315 tests using isolated in-memory SQLite
-  and a test-only fast password hasher; JavaScript suite passed 119 tests.
-  Migration drift and Git whitespace checks are clean.
-- Plugin: 21 of 22 direct test scripts passed in the QGIS 3.44.14 / Python 3.12
-  environment. The unchanged isolated credential-vault test stalled, including
-  with the installed launcher; it is not reported as passed. Focused final adapter,
-  saved-route/dialog, terrain, and WPML checks pass.
-- `tools/check_consumer_parity.py` compares eight semi/full-auto, manual/automatic,
-  and cross-hatch combinations. Both adapters produce identical complete results.
-  The website accepts plugin provenance. Split-flight KMZ coordinates, camera
-  actions, pitch/wait values, and turn flags match in both `template.kml` and
-  `waylines.wpml` (coordinate serialization tolerance: 1e-8 degrees).
-- The built plugin ZIP was extracted into an isolated directory and used offline
-  under QGIS 3.44.14 to plan/export fixture 126: three flights, 177 photo actions,
-  with matching counts in both KMZ members. This is an extracted-package smoke
-  test, not a QGIS plugin-manager installation or aircraft execution test.
+- All engine test scripts pass across the supported Python matrix.
+- `tools/check_consumer_parity.py` compares eight semi/full-auto,
+  manual/automatic, and cross-hatch combinations across both adapters.
+- Split-flight KMZ coordinates and camera actions match within the documented
+  serialization tolerance.
+- The packaged plugin was smoke-tested offline with QGIS 3.44.14 on Windows.
 
-## Source cleanup after integration
+These checks do not replace plugin-manager installation tests, broader platform
+coverage, controller validation, or flight testing on supported aircraft.
 
-Removed redundant plugin action/live-result caches and repeated result validation;
-preview now uses the engine's flight partitions directly. Removed the website's
-duplicate estimate cache, unreachable route fallback, repeated profile lookup,
-and three copies of the same legacy distance helper. Each consumer now has one
-camera-action XML serializer for both saved legacy routes and engine actions.
+## Remaining public limits
 
-Tracked handwritten Python/JavaScript production lines, including comments and
-blank lines, excluding tests, vendored source, migrations, and tooling:
-
-| Repository | Before cleanup | After cleanup | Net removed |
-| --- | ---: | ---: | ---: |
-| Plugin (baseline `713e8a2`) | 9,942 | 9,810 | 132 |
-| Website (baseline `846106b`) | 15,949 | 15,837 | 112 |
-| Engine | 1,206 | 1,206 | 0 |
-
-Active browser previews, legacy saved-route export, terrain, and corridor paths
-remain: deleting them requires migrating their remaining behavior first.
-Database columns and the engine release/vendor pin were not changed.
-
-Cleanup verification: website 315 Django and 119 JavaScript tests passed before
-the serializer consolidation, followed by 31 export tests on the final writer.
-All 64 before/after canonical XML comparisons preserved action IDs, timing,
-ordering, turn flags, and heights. Eight cross-product planning/export cases
-and the vendored-source check also passed.
-Final plugin checks passed: 18 WPML, five adapter, 13 terrain checks, and the
-QGIS dialog test. The rebuilt ZIP passed an extracted offline QGIS 3.44.14 /
-Python 3.12 smoke test: 64 waypoints in one flight, with 64 photo actions in
-both KMZ members. This remains a package smoke test, not an aircraft test.
-
-## Remaining work and explicit limits
-
-1. Publish the reviewed engine tag before installing the website requirements
-   from the remote repository. Both development integrations already use the
-   matching local candidate.
-2. Apply the website's additive planning-provenance migration during deployment.
-   It was tested on an isolated database; existing application data was untouched.
-3. Remove the 15 inert DroneConfig columns after approval to discard their stored
-   values. Automatic approval review rejected adding that destructive migration;
-   the non-destructive engine-profile adapter is implemented instead. The removed
-   columns are `drone_enum`, `sensor_width_mm`, `sensor_height_mm`,
-   `focal_length_mm`, `image_width_px`, `image_height_px`, `min_speed_ms`,
-   `max_speed_ms`, `default_speed_ms`, `photo_interval_seconds`,
-   `battery_safe_minutes`, `continuous_trigger`, `payload_enum`,
-   `payload_sub_enum`, and `payload_position_index`. Mission records and saved
-   routes are not intended to be deleted.
-4. Resolve the credential-vault test environment, test plugin-manager installation,
-   and validate exported missions on supported aircraft/controllers. Other QGIS,
-   Python, and operating-system combinations are not newly verified here.
-   Candidate plugin metadata is restricted to QGIS 3.44.14–3.44.x; the previous
-   broad QGIS 3.16/4.x and Python 3.9 claims have been removed.
-5. Enterprise native mapping export cannot yet serialize this complete consumer
-   action contract; shared-result enterprise export is blocked explicitly.
-6. Plugin-to-website sync rejects holes/multipart polygons because the website's
-   current polygon storage cannot preserve them losslessly.
-7. Launch/home coordinates are supported in the contract and retained in saved
-   provenance; location-picker UI remains deferred. Terrain/corridor engine
-   migration and controller delivery remain later phases.
+1. Publish the reviewed engine tag before treating `v0.4.0` as released.
+2. Validate plugin installation across the supported QGIS/Python/platform
+   matrix and test exported missions on supported controllers and aircraft.
+3. Enterprise native mapping export remains blocked where it cannot represent
+   the complete shared action contract.
+4. Mission sync rejects polygon holes and multipart areas until the public sync
+   contract can represent them losslessly.
+5. Launch/home coordinates are supported by the engine contract; picker UI,
+   terrain/corridor migration, and controller delivery remain later phases.

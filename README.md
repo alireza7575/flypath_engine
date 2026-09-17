@@ -8,11 +8,10 @@ time-balanced flights, explicit capture actions, complete/known estimates,
 warnings, and export validation. The lower-level geometry, measurement,
 statistics, split-helper, and profile APIs remain available.
 
-The local website and plugin adapters consume the `v0.4.0` candidate. The plugin
-vendors the tagged source; the website development environment uses its built
-wheel. The tag has not been published remotely. See
-[integration status](docs/integration-status.md) for tested behavior and remaining
-release, database-cleanup, and installation work.
+The website and plugin adapters consume the `v0.4.0` candidate. The plugin
+vendors the pinned source. The tag has not been published remotely. See
+[integration status](docs/integration-status.md) for tested behavior and
+remaining public release limits.
 
 Run the checks with a Python environment containing Shapely and pyproj:
 
@@ -33,5 +32,5 @@ python tools/check_consumer_parity.py --website ../flypath.io --plugin ../FlyPat
 ```
 
 CI runs on Linux x64, Windows x64, and macOS ARM with Python 3.10 and
-3.13 coverage. macOS Intel remains part of the QGIS installation matrix because
-GitHub does not provide a standard Intel runner for this private repository.
+3.13 coverage. macOS Intel remains part of the QGIS installation matrix but is
+not covered by the standard hosted runner matrix.
